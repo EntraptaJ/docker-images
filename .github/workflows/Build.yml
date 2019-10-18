@@ -32,6 +32,7 @@ jobs:
           password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
           registry: docker.pkg.github.com
           path: Renovate
+          cache: true
   Build-Altair-alpine:
     runs-on: ubuntu-latest
     steps:
@@ -45,6 +46,7 @@ jobs:
           password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
           registry: docker.pkg.github.com
           path: Altair
+          cache: true
   Build-VS-Code:
     runs-on: ubuntu-latest
     steps:
@@ -58,3 +60,4 @@ jobs:
           password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
           registry: docker.pkg.github.com
           path: VS-Code
+          cache: true
