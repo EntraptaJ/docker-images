@@ -81,7 +81,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Update Docker
-        run: sudo apt-get update && sudo apt-get upgrade docker
+        run: sudo apt-get update && sudo apt-get upgrade -y docker
       - name: Dump Docker Version
         run: docker -v
       - name: Publish to Registry
