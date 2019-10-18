@@ -2,9 +2,8 @@ FROM alpine
 RUN apk add --no-cache git zsh sudo openssl && wget https://github.com/cdr/code-server/releases/download/2.1523-vsc1.38.1/code-server2.1523-vsc1.38.1-alpine-x86_64.tar.gz -qO /tmp/code-server2.1523-vsc1.38.1-alpine-x86_64.tar.gz && \
   tar -xzf /tmp/code-server2.1523-vsc1.38.1-alpine-x86_64.tar.gz -C /tmp && \
   mv /tmp/code-server2.1523-vsc1.38.1-alpine-x86_64/code-server /usr/local/bin && \
-  export DEMYX_DOCKER_BINARY=$(wget -O - https://api.github.com/repos/docker/docker-ce/releases/latest | grep '"name":' | awk -F '[:]' '{print $2}' | sed -e 's/"//g' | sed -e 's/,//g' | sed -e 's/ //g' | sed -e 's/\r//g') && \ 
-  wget https://download.docker.com/linux/static/stable/x86_64/docker-"$DEMYX_DOCKER_BINARY".tgz -qO /tmp/docker-"$DEMYX_DOCKER_BINARY".tgz && \
-  tar -xzf /tmp/docker-"$DEMYX_DOCKER_BINARY".tgz -C /tmp && \
+  wget https://download.docker.com/linux/static/stable/x86_64/docker-19.03.3.tgz -qO /tmp/docker-19.03.4.tgz && \
+  tar -xzf /tmp/docker-19.03.4.tgz -C /tmp && \
   mv /tmp/docker/docker /usr/local/bin/docker-bin && \
   echo '#!/bin/sh' >> /usr/local/bin/docker && \
   echo 'sudo /usr/local/bin/docker-bin "$@"' >> /usr/local/bin/docker && \
@@ -61,11 +60,14 @@ RUN mkdir /home/vs-code/Projects
 RUN chown -R vs-code:vs-code /home/vs-code
 RUN echo -e "{\n    \"terminal.integrated.shell.linux\": \"/bin/zsh\"\n}" > /home/vs-code/.code/data/User/settings.json
 RUN echo "vs-code ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+COPY npm /usr/local/bin/npm 
+RUN chmod +x /usr/local/bin/npm
 
 EXPOSE 8080
 WORKDIR /home/vs-code
 USER vs-code
 
+VOLUME [ "/home/vs-code/Projects" ]
 ENV DOCKER_HOST=/var/run/docker.sock
 
 CMD [ "/usr/local/bin/code-server", "/home/vs-code/Projects", "--user-data-dir=/home/vs-code/.code/data", "--extensions-dir=/home/vs-code/.code/extensions" ]

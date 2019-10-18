@@ -1,0 +1,1 @@
+docker run -it -w $PWD --user=$UID:1000 --volumes-from $(hostname) mhart/alpine-node:latest npm "$@"
