@@ -61,15 +61,18 @@ RUN  sed -i -e 's/#access_log  logs\/access.log  main;/access_log \/dev\/stdout;
 RUN addgroup -S nginx
 RUN adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx
 RUN  rm -rf /tmp/*
-RUN  apk del ${build_pkgs}
+RUN  apk del ${BUILD_PKGS}
 RUN  rm -rf /var/cache/apk/*
 
-
+FROM alpine:3.10
+COPY --from=0 /etc/nginx /etc/nginx
+COPY --from=0 /usr/sbin/nginx /usr/sbin/nginx
+COPY --from=0 /usr/lib/libpcre.so.1 /usr/lib/libpcre.so.1
+RUN addgroup -S nginx
+RUN adduser -D -S -h /var/cache/nginx -s /sbin/nologin -G nginx nginx
 COPY files/index.html /etc/nginx/html/
 COPY files/nginx.conf /etc/nginx/nginx.conf
-
-USER nginx:nginx
-VOLUME ["/var/cache/nginx"]
+VOLUME ["/var/cache/nginx", "/var/log/nginx"]
 
 EXPOSE 80 443
 
