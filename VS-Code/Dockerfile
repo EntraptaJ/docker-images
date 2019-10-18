@@ -44,9 +44,9 @@ COPY --from=0 /root/.zshrc /root/.zshrc
 COPY --from=0 ["/root/.oh-my-zsh/", "/root/.oh-my-zsh/"]
 COPY --from=0 ["/usr/lib/libncursesw.so.6*","/usr/lib/libpcre2*", "/usr/lib/libcurl.so.4*", "/usr/lib/libnghttp2*", "/usr/lib/"]
 COPY --from=0 ["/usr/lib/zsh", "/usr/lib/zsh"]
-COPY --from=0 /usr/share/git-core /usr/share/git-core
-COPY --from=0 /usr/libexec/git-core /usr/libexec/git-core
-COPY --from=0 /etc/ssl /etc/ssl
+COPY --from=0 ["/usr/share/git-core/", "/usr/share/git-core/"]
+COPY --from=0 ["/usr/libexec/git-core/", "/usr/libexec/git-core/"]
+COPY --from=0 ["/etc/ssl/", "/etc/ssl/"]
 COPY --from=0 ["/etc/zsh", "/etc/zsh"]
 RUN chmod +x /usr/bin/docker
 RUN addgroup -g 1000 -S vs-code
