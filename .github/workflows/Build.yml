@@ -5,11 +5,10 @@ on:
     - cron:  '0 4 * * *'
   push:
 jobs:
-  Build:
+  Build-NGINX-Quiche:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: textbook/git-checkout-submodule-action@master
       - name: Publish to Registry
         uses: KristianFJones/Publish-Docker-Github-Action@master
         with:
@@ -20,3 +19,42 @@ jobs:
           registry: docker.pkg.github.com
           path: NGINX/Quiche
           cache: true
+  Build-Renovate-alpine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Publish to Registry
+        uses: KristianFJones/Publish-Docker-Github-Action@master
+        with:
+          dockerfile: Renovate/Dockerfile
+          name: docker.pkg.github.com/kristianfjones/docker-images/renovate-alpine
+          username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
+          password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
+          registry: docker.pkg.github.com
+          path: Renovate
+  Build-Altair-alpine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Publish to Registry
+        uses: KristianFJones/Publish-Docker-Github-Action@master
+        with:
+          dockerfile: Altair/Dockerfile
+          name: docker.pkg.github.com/kristianfjones/docker-images/altair-alpine
+          username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
+          password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
+          registry: docker.pkg.github.com
+          path: Altair
+  Build-VS-Code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Publish to Registry
+        uses: KristianFJones/Publish-Docker-Github-Action@master
+        with:
+          dockerfile: VS-Code/Dockerfile
+          name: docker.pkg.github.com/kristianfjones/docker-images/vs-code-alpine
+          username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
+          password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
+          registry: docker.pkg.github.com
+          path: VS-Code
