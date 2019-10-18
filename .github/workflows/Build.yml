@@ -5,6 +5,13 @@ on:
     - cron:  '0 4 * * *'
   push:
 jobs:
+  Lab:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
   Build-NGINX-Quiche:
     runs-on: ubuntu-latest
     steps:
