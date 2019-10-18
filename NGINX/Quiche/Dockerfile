@@ -13,6 +13,7 @@ WORKDIR /tmp
 RUN wget https://nginx.org/download/nginx-${NGINX_VERSION}.tar.gz
 RUN tar xzf nginx-${NGINX_VERSION}.tar.gz
 RUN git clone --recursive https://github.com/cloudflare/quiche
+RUN git clone --recursive https://github.com/google/ngx_brotli.git
 WORKDIR /tmp/nginx-${NGINX_VERSION}  
 RUN patch -p01 < ../quiche/extras/nginx/nginx-1.16.patch
 RUN ./configure \
@@ -54,7 +55,8 @@ RUN ./configure \
   --with-http_v3_module \
   --with-openssl=../quiche/deps/boringssl \
   --with-quiche=../quiche \
-  --with-http_v2_module
+  --with-http_v2_module \
+  --add-module=../ngx_brotli
 RUN  make && make install
 
 RUN  sed -i -e 's/#access_log  logs\/access.log  main;/access_log \/dev\/stdout;/' -e 's/#error_log  logs\/error.log  notice;/error_log stderr notice;/' /etc/nginx/nginx.conf
