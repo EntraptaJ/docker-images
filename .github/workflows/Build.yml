@@ -5,35 +5,6 @@ on:
     - cron: '0 4 * * *'
   push:
 jobs:
-  Lab:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: Dump job context
-        env:
-          JOB_CONTEXT: ${{ toJson(job) }}
-        run: echo "$JOB_CONTEXT"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
-      - name: Dump runner context
-        env:
-          RUNNER_CONTEXT: ${{ toJson(runner) }}
-        run: echo "$RUNNER_CONTEXT"
-      - name: Dump strategy context
-        env:
-          STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-        run: echo "$STRATEGY_CONTEXT"
-      - name: Dump matrix context
-        env:
-          MATRIX_CONTEXT: ${{ toJson(matrix) }}
-        run: echo "$MATRIX_CONTEXT"
-      - name: Dump Docker Version
-        run: docker -v
   Build-NGINX-Quiche:
     runs-on: ubuntu-latest
     steps:
@@ -75,24 +46,6 @@ jobs:
           password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
           registry: docker.pkg.github.com
           path: Altair
-          cache: true
-  Build-VS-Code:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: Update Docker
-        run: sudo apt-get remove docker docker-engine docker.io containerd runc && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add - && sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && sudo apt-get update && sudo apt-get install docker-ce docker-ce-cli containerd.io && sudo apt-get upgrade
-      - name: Dump Docker Version
-        run: docker -v
-      - name: Publish to Registry
-        uses: KristianFJones/Publish-Docker-Github-Action@master
-        with:
-          dockerfile: VS-Code/Dockerfile
-          name: docker.pkg.github.com/kristianfjones/docker-images/vs-code-alpine
-          username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
-          password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
-          registry: docker.pkg.github.com
-          path: VS-Code
           cache: true
   Build-Node-Alpine:
     runs-on: ubuntu-latest
