@@ -2,7 +2,7 @@ name: Build
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '0 4 * * *'
+    - cron: '0 4 * * *'
   push:
 jobs:
   Lab:
@@ -107,4 +107,18 @@ jobs:
           password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
           registry: docker.pkg.github.com
           path: Node/Node-Alpine
+          cache: true
+  Build-Telnet-alpine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Publish to Registry
+        uses: KristianFJones/Publish-Docker-Github-Action@master
+        with:
+          dockerfile: Telnet/Dockerfile
+          name: docker.pkg.github.com/kristianfjones/docker-images/telnet-alpine
+          username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
+          password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
+          registry: docker.pkg.github.com
+          path: Telnet
           cache: true
