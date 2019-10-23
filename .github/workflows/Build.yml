@@ -61,7 +61,7 @@ jobs:
           registry: docker.pkg.github.com
           path: Node/Node-Alpine
           cache: true
-  Build-Telnet-alpine:
+  Build-Telnet:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
@@ -69,7 +69,7 @@ jobs:
         uses: KristianFJones/Publish-Docker-Github-Action@master
         with:
           dockerfile: Telnet/Dockerfile
-          name: docker.pkg.github.com/kristianfjones/docker-images/telnet-alpine
+          name: docker.pkg.github.com/kristianfjones/docker-images/telnet
           username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
           password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
           registry: docker.pkg.github.com
