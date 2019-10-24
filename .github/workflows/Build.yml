@@ -75,3 +75,17 @@ jobs:
           registry: docker.pkg.github.com
           path: Telnet
           cache: true
+  Build-Git-Alpine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Publish to Registry
+        uses: KristianFJones/Publish-Docker-Github-Action@master
+        with:
+          dockerfile: Git/Alpine/Dockerfile
+          name: docker.pkg.github.com/kristianfjones/docker-images/git:alpine
+          username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
+          password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
+          registry: docker.pkg.github.com
+          path: Git/Alpine
+          cache: true
