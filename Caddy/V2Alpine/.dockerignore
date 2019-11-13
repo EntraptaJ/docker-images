@@ -1,0 +1,11 @@
+/.git
+/.vscode
+/.task
+/.dockerignore
+/.editorconfig
+/.gitignore
+/README.md
+/Taskfile.yml
+
+/build
+!/build/files
