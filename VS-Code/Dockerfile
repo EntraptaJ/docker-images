@@ -13,19 +13,19 @@ RUN apk add --no-cache git zsh sudo openssl && wget https://github.com/cdr/code-
 RUN addgroup -g 1000 -S vs-code
 RUN adduser -u 1000 -D -S -G vs-code vs-code
 RUN mkdir -p /home/vs-code/ && wget -O - https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh ; \
-    git clone https://github.com/zsh-users/zsh-autosuggestions.git /root/.oh-my-zsh/plugins/zsh-autosuggestions; \
-    sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="ys"/g' /root/.zshrc; \
-    sed -i "s/(git)/(git zsh-autosuggestions)/g" /root/.zshrc; \
-    su -c "$(wget -O - https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" -s /bin/sh vs-code ; \
-    git clone https://github.com/zsh-users/zsh-autosuggestions.git /home/vs-code/.oh-my-zsh/plugins/zsh-autosuggestions; \
-    sed -i "s/(git)/(git zsh-autosuggestions)/g" /home/vs-code/.zshrc; \
-    \
-    # Symlink demyx command history with root
-    ln -s /home/vs-code/.zsh_history /root; \
-    \
-    # gpg purposes
-    echo 'export GPG_TTY=$(tty)' >> /root/.zshrc; \
-    echo 'export GPG_TTY=$(tty)' >> /home/vs-code/.zshrc
+  git clone https://github.com/zsh-users/zsh-autosuggestions.git /root/.oh-my-zsh/plugins/zsh-autosuggestions; \
+  sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="ys"/g' /root/.zshrc; \
+  sed -i "s/(git)/(git zsh-autosuggestions)/g" /root/.zshrc; \
+  su -c "$(wget -O - https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" -s /bin/sh vs-code ; \
+  git clone https://github.com/zsh-users/zsh-autosuggestions.git /home/vs-code/.oh-my-zsh/plugins/zsh-autosuggestions; \
+  sed -i "s/(git)/(git zsh-autosuggestions)/g" /home/vs-code/.zshrc; \
+  \
+  # Symlink demyx command history with root
+  ln -s /home/vs-code/.zsh_history /root; \
+  \
+  # gpg purposes
+  echo 'export GPG_TTY=$(tty)' >> /root/.zshrc; \
+  echo 'export GPG_TTY=$(tty)' >> /home/vs-code/.zshrc
 
 
 FROM mhart/alpine-node:slim
@@ -56,17 +56,23 @@ RUN sed -i "s|/home/vs-code:/sbin/nologin|/home/vs-code:/bin/zsh|g" /etc/passwd
 COPY --from=0 /home/vs-code/ /home/vs-code/
 RUN mkdir -p /home/vs-code/.code/data/User
 RUN mkdir /home/vs-code/Projects
-RUN chown -R vs-code:vs-code /home/vs-code
 RUN echo -e "{\n    \"terminal.integrated.shell.linux\": \"/bin/zsh\"\n}" > /home/vs-code/.code/data/User/settings.json
 RUN echo "vs-code ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 COPY npm /usr/local/bin/npm 
+COPY docker-compose /usr/local/bin/docker-compose
+COPY runner /usr/local/bin/runner
 RUN chmod +x /usr/local/bin/npm
+RUN chmod +x /usr/local/bin/docker-compose
+RUN chmod +x /usr/local/bin/runner
 
 EXPOSE 8080
 WORKDIR /home/vs-code
-USER vs-code
 
 VOLUME [ "/home/vs-code/Projects" ]
 ENV DOCKER_HOST=/var/run/docker.sock
+ENV EXTENSIONS="/usr/local/bin/code-server --install-extension azemoh.theme-onedark --extensions-dir=/home/vs-code/.code/extensions --user-data-dir=/home/vs-code/.code/data"
 
-CMD [ "/usr/local/bin/code-server", "/home/vs-code/Projects", "--user-data-dir=/home/vs-code/.code/data", "--extensions-dir=/home/vs-code/.code/extensions" ]
+ADD start.sh /start.sh
+RUN chmod +x /start.sh
+
+CMD /start.sh

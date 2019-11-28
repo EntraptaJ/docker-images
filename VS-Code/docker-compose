@@ -1,0 +1,1 @@
+runner -v /var/run/docker.sock:/var/run/docker.sock docker.pkg.github.com/kristianfjones/docker-images/docker-compose-alpine:latest docker-compose --project-name $PROJECT_ID  "$@"
