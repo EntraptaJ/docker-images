@@ -2,7 +2,7 @@ name: Build
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron: "0 4 * * *"
+    - cron: '0 4 * * *'
   push:
 jobs:
   Build-Renovate-alpine:
@@ -118,17 +118,47 @@ jobs:
           path: BFG
           cache: true
 
-  Build-Caddy-Alpine:
+  Build-CoreDNS:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
       - name: Publish to Registry
         uses: KristianFJones/Publish-Docker-Github-Action@master
         with:
-          dockerfile: Caddy/V2Alpine/Dockerfile
-          name: docker.pkg.github.com/kristianfjones/docker-images/caddy2:alpine
+          dockerfile: CoreDNS/Dockerfile
+          name: docker.pkg.github.com/kristianfjones/docker-images/coredns-scratch:scratch
           username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
           password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
           registry: docker.pkg.github.com
-          path: Caddy/V2Alpine
+          path: CoreDNS
+          cache: true
+
+  Build-Sonarr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Publish to Registry
+        uses: KristianFJones/Publish-Docker-Github-Action@master
+        with:
+          dockerfile: MediaServer/Sonarr/Dockerfile
+          name: docker.pkg.github.com/kristianfjones/docker-images/media-sonarr:latest
+          username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
+          password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
+          registry: docker.pkg.github.com
+          path: MediaServer/Sonarr
+          cache: true
+
+  Build-Radarr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Publish to Registry
+        uses: KristianFJones/Publish-Docker-Github-Action@master
+        with:
+          dockerfile: MediaServer/Radarr/Dockerfile
+          name: docker.pkg.github.com/kristianfjones/docker-images/media-radarr:latest
+          username: ${{ secrets.DOCKER_GITHUB_USERNAME }}
+          password: ${{ secrets.DOCKER_GITHUB_PASSWORD }}
+          registry: docker.pkg.github.com
+          path: MediaServer/Radarr
           cache: true
